@@ -1,26 +1,24 @@
 pom
 ===
 
-a minimalist pomodoro-style time-tracker.
+A minimalistic time-tracker with logging.
 
-synopsis
+Usage
 --------
 
-    pom message [-l [logfile]]
+    pom <task>
 
-description
+Synopsis
 -----------
 
-The pom utility counts down for 25 minutes as you work on a task. It will
-give an audible alert at 5 and 0 minutes if `say` or `espeak` is in the
-path and executable.
+The `pom` utility counts down for a predefined length of time while you work on a task and outputs datestamped logs when each period ends.
 
-`-l [logfile]`
-    If provided, log the completed task and timestamp to `logfile`. The
-    default is the `POMLOG` environment variable, if set. Otherwise, the
-    default is `$HOME/pom.log`.
+Configuration
+--------------
 
-extras
+The variables `time_in_minutes` and `logfile` can be changed in the `CONFIGURATION` section at the head of the script.  By default, `time_in_minutes=25` and `logfile=$HOME/.pom.log`.
+
+Extras
 ------
 
 1. Use `#hashtags` in your messages so you can easily grep for them later.
@@ -28,7 +26,7 @@ extras
 
         awk '/#hacks/ { total += $1 } END { print total / 60 " hours" }' pom.log
 
-notes
+Notes
 -----
 
-The PowerShell version is maintained by [luv2code](https://github.com/luv2code).
+A PowerShell version is available at the repository from which this was derived, [here](https://github.com/tobym/pom).
