@@ -1,64 +1,34 @@
 #!/bin/bash
 
-#
-# NAME
-#     pom -- a minimalist pomodoro-style time-tracker.
-#
-# SYNOPSIS
-#     pom message [-l [logfile]]
-#
-# DESCRIPTION
-#     The pom utility counts down for 25 minutes as you work on a task. It will
-#     give an audible alert at 5 and 0 minutes if `say` or `espeak` is in the
-#     path and executable.
-#
-#     -l [logfile]
-#         If provided, log the completed task and timestamp to [logfile]. The
-#         default is the POMLOG environment variable, if set. Otherwise, the
-#         default is $HOME/pom.log.
-#
-# by @tobym (Toby Matejovsky) 2012-09-19.
+# Minimalistic time tracking and logging.
+# Run with `-h` or `--help` to learn more.
+# By John O Brickley.
+# Derived from a script by @tobym (Toby Matejovsky).
 
+################################
+#        CONFIGURATION         #
+################################
 # Runtime of a single session.
 time_in_minutes=25
+# Logfile.
+logfile=$HOME/.pom.log
+
+task=$@
 
 # Print current status.
-# First argument is number of minutes elapsed.
 function print_status {
   clear
   minutes_remaining=$(($time_in_minutes - $1))
-  log_line=$(test -n "$logfile" && echo -n " ($logfile)" || echo -n "")
-  echo "Pomodoro$log_line: $minutes_remaining minutes remaining to complete: $goal"
-
-  if [ $minutes_remaining = 5 ]
-  then
-    safe_say "$minutes_remaining minutes remaining in your pomadoro" &
-  fi
+  echo "$minutes_remaining minutes remaining to: $task"
 }
 
-# Print final status. Optionally log this event.
+# Print final status.
 function finish {
   clear
-  msg="$time_in_minutes minute pomodoro done at $(date) for: $goal"
+  msg="Worked on $task for $time_in_minutes."
   echo $msg
-
-  if [ ! -z $logfile ]
-  then
-    echo $msg >> $logfile
-  fi
-
-  break_msg="Pomodoro complete. Take a 5 minute break."
-  echo $break_msg
-  safe_say "$break_msg" || ring_bell
-}
-
-# Audibly say something, if possible.
-function safe_say {
-  for cmd in espeak say
-  do
-    which $cmd >/dev/null && $cmd "$1" 2>/dev/null && return
-  done
-  return 1
+  echo "$(date +"%Y-%m-%d") $msg" >> $logfile
+  ring_bell
 }
 
 # Try to ring the terminal bell.
@@ -68,7 +38,7 @@ function ring_bell {
 
 # Print short version of help.
 function print_usage {
-  echo "Usage: $0 message [-l [logfile]]"
+  echo "Usage: pom <task>"
 }
 
 # Print help.
@@ -78,17 +48,12 @@ function print_help {
       pom -- a minimalist pomodoro-style time-tracker.
 
   SYNOPSIS
-      pom message [-l [logfile]]
+      pom <task>
 
   DESCRIPTION
-      The pom utility counts down for 25 minutes as you work on a task. It will
-      give an audible alert at 5 and 0 minutes if `say` or `espeak` is in the
-      path and executable.
-
-      -l [logfile]
-          If provided, log the completed task and timestamp to [logfile]. The
-          default is the POMLOG environment variable, if set. Otherwise, the
-          default is $HOME/pom.log.
+      The pom utility counts down for 25 minutes as you work on a task.
+      Logfile location is $HOME/.pom.log by default, but can be changed
+      in the "CONFIGURATION" section at the top of the script source.
 '
 
   echo "$help_text"
@@ -104,27 +69,11 @@ function run_main {
   finish
 }
 
-# Parse options, and run main.
-goal=$1
-should_log=$2
-logfile=$3
-if [ "$should_log" = "-l" ] && [ -z "$logfile" ]
-then
-  if [ -z $POMLOG ]
-  then
-    logfile=$HOME/pom.log
-  else
-    logfile=$POMLOG
-  fi
-fi
-
+# Parse options and run main.
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
   print_help && exit 0
 elif [ -z "$1" ]
-then
-  print_usage && exit 1
-elif [ ! -z "$2" ] && [ "$2" != "-l" ]
 then
   print_usage && exit 1
 else
