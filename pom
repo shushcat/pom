@@ -96,5 +96,4 @@ then
     print_usage && exit 1
 else
     run_main
-    play_chime
 fi
