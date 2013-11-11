@@ -18,9 +18,20 @@ task=$@
 scriptlocation=$(echo ${0%/*}/pom)
 
 # Try to sound chime.
-function play_chime {
-    afplay $scriptlocation/chime.m4a
+function play_command {
+    for cmd in afplay mpg123
+    do
+        which $cmd > /dev/null && $cmd "$1" 2> /dev/null && return
+    done
+    return 1
 }
+
+function play_chime {
+    play_command $scriptlocation/chime.m4a
+
+}
+
+
 # Print current status.
 function print_status {
     clear
@@ -84,6 +95,6 @@ elif [ -z "$1" ]
 then
     print_usage && exit 1
 else
-    play_chime
     run_main
+    play_chime
 fi
