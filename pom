@@ -42,9 +42,9 @@ function print_status {
 # Print final status.
 function finish {
     clear
-    msg="$time_in_minutes minutes of $task"
+    msg="$time_in_minutes minutes on $task"
     echo $msg
-    echo "$(date +"%Y-%m-%d  %H:%M")   $msg" >> $logfile
+    echo "$(date +"%Y-%m-%d  %H:%M")   $time_in_minutes  $task" >> $logfile
     ring_bell
     play_chime
 }
