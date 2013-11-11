@@ -36,7 +36,7 @@ function play_chime {
 function print_status {
     clear
     minutes_remaining=$(($time_in_minutes - $1))
-    echo "$minutes_remaining minutes remaining to: $task"
+    echo "$minutes_remaining minutes remaining for: $task"
 }
 
 # Print final status.
