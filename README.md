@@ -19,6 +19,7 @@ Configuration
 The variables `time_in_minutes` and `logfile` can be set using a `.pom.rc` file in your `$HOME`.  By default, `time_in_minutes=25` and `logfile=$HOME/.pom.log`.
 
 A simple alternative configuration file, `~/.pom.rc`, might look like this:
+
     time_in_minutes=10
     logfile="/dev/null"
 
