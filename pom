@@ -27,7 +27,7 @@ function finish {
   clear
   msg="$time_in_minutes minutes of $task"
   echo $msg
-  echo "$(date +"%Y-%m-%d") $msg" >> $logfile
+  echo "$(date +"%Y-%m-%d  %H:%M")   $msg" >> $logfile
   ring_bell
 }
 
