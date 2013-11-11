@@ -46,7 +46,7 @@ function finish {
     echo $msg
     echo "$(date +"%Y-%m-%d  %H:%M")   $msg" >> $logfile
     ring_bell
-    sound_chime
+    play_chime
 }
 
 # Try to ring the terminal bell.
