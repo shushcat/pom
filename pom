@@ -15,36 +15,43 @@ logfile=$HOME/.pom.log
 
 task=$@
 
+scriptlocation=$(echo ${0%/*}/pom)
+
+# Try to sound chime.
+function play_chime {
+    afplay $scriptlocation/chime.m4a
+}
 # Print current status.
 function print_status {
-  clear
-  minutes_remaining=$(($time_in_minutes - $1))
-  echo "$minutes_remaining minutes remaining to: $task"
+    clear
+    minutes_remaining=$(($time_in_minutes - $1))
+    echo "$minutes_remaining minutes remaining to: $task"
 }
 
 # Print final status.
 function finish {
-  clear
-  msg="$time_in_minutes minutes of $task"
-  echo $msg
-  echo "$(date +"%Y-%m-%d  %H:%M")   $msg" >> $logfile
-  ring_bell
+    clear
+    msg="$time_in_minutes minutes of $task"
+    echo $msg
+    echo "$(date +"%Y-%m-%d  %H:%M")   $msg" >> $logfile
+    ring_bell
+    sound_chime
 }
 
 # Try to ring the terminal bell.
 function ring_bell {
-  which tput >/dev/null && tput bel
+    which tput >/dev/null && tput bel
 }
 
 # Print short version of help.
 function print_usage {
-  echo "Usage: pom <task>"
+    echo "Usage: pom <task>"
 }
 
 # Print help.
 function print_help {
-  help_text='
-  NAME
+    help_text='
+    NAME
       pom -- a minimalist pomodoro-style time-tracker.
 
   SYNOPSIS
@@ -56,26 +63,27 @@ function print_help {
       in the "CONFIGURATION" section at the top of the script source.
 '
 
-  echo "$help_text"
+    echo "$help_text"
 }
 
 # Main function.
 function run_main {
-  for minute in `seq $time_in_minutes`
-  do
-    print_status $(($minute-1))
-    sleep 60
-  done
-  finish
+    for minute in `seq $time_in_minutes`
+    do
+        print_status $(($minute-1))
+        sleep 60
+    done
+    finish
 }
 
 # Parse options and run main.
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
-  print_help && exit 0
+    print_help && exit 0
 elif [ -z "$1" ]
 then
-  print_usage && exit 1
+    print_usage && exit 1
 else
-  run_main
+    play_chime
+    run_main
 fi
