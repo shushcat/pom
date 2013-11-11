@@ -25,7 +25,7 @@ function print_status {
 # Print final status.
 function finish {
   clear
-  msg="Worked on $task for $time_in_minutes."
+  msg="$time_in_minutes minutes of $task"
   echo $msg
   echo "$(date +"%Y-%m-%d") $msg" >> $logfile
   ring_bell
