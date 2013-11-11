@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -e
 
 # Minimalistic time tracking and logging.
 # Run with `-h` or `--help` to learn more.
@@ -8,29 +8,29 @@
 ################################
 #        CONFIGURATION         #
 ################################
+
 # Runtime of a single session.
 time_in_minutes=25
 # Logfile.
 logfile=$HOME/.pom.log
+# Check for config overrides.
+if [[ -e $HOME/.pom.rc ]]; then
+    source $HOME/.pom.rc
+fi
 
 task=$@
 
-scriptlocation=$(echo ${0%/*}/pom)
-
-# Try to sound chime.
-function play_command {
-    for cmd in afplay mpg123
-    do
-        which $cmd > /dev/null && $cmd "$1" 2> /dev/null && return
-    done
-    return 1
-}
-
+# Play a chime if `afplay` or `mpg123` is present.
 function play_chime {
-    play_command $scriptlocation/chime.m4a
-
+    chimelocation=$(echo ${0%/*}/pom/chime.mp3)
+    if command -v afplay &> /dev/null; then
+        afplay $chimelocation
+    elif command -v mpg123 &> /dev/null; then
+        mpg123 $chimelocation
+    else
+        return
+    fi
 }
-
 
 # Print current status.
 function print_status {
