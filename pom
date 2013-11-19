@@ -36,13 +36,13 @@ function play_chime {
 function print_status {
     clear
     minutes_remaining=$(($time_in_minutes - $1))
-    echo "$minutes_remaining minutes remaining for: $task"
+    echo "$minutes_remaining minutes remaining for: $task."
 }
 
 # Print final status.
 function finish {
     clear
-    msg="$time_in_minutes minutes on $task"
+    msg="$time_in_minutes minutes on $task."
     echo $msg
     echo "$(date +"%Y-%m-%d  %H:%M")   $time_in_minutes  $task" >> $logfile
     ring_bell
