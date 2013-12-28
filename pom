@@ -10,7 +10,7 @@
 ################################
 
 # Runtime of a single session.
-time_in_minutes=2
+time_in_minutes=25
 # Logfile.
 logfile=$HOME/.pom.log
 # Check for config overrides.
