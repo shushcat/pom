@@ -34,7 +34,7 @@ function set_play_command {
 # Play a chime.#{{{
 function play_chime {
     chime_location=$(echo ${0%/*}/pom/chime.mp3)
-    $play_command $chime_location
+    $play_command $chime_location &
     return
 }
 #}}}
