@@ -31,18 +31,9 @@ function set_play_command {
 }
 #}}}
 
-# Play pink noise.#{{{
-function play_noise {
-    chime_location=$(echo ${0%/*}/pom/noise.mp3)
-    $play_command $chime_location
-    return
-}
-#}}}
-
 # Play a chime.#{{{
 function play_chime {
     chime_location=$(echo ${0%/*}/pom/chime.mp3)
-    sleep 4  # Wait for noise to stop.
     $play_command $chime_location
     return
 }
@@ -104,11 +95,7 @@ function run_main {
     for minute in `seq $time_in_minutes`
     do
         print_status $(($minute-1))
-        for second in `seq 60`
-        do
-            play_noise &
-            sleep 1
-        done
+        sleep 60
     done
     finish
 }
