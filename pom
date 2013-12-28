@@ -10,7 +10,7 @@
 ################################
 
 # Runtime of a single session.
-time_in_minutes=25
+time_in_minutes=2
 # Logfile.
 logfile=$HOME/.pom.log
 # Check for config overrides.
@@ -20,26 +20,43 @@ fi
 
 task=$@
 
-# Play a chime if `afplay` or `mpg123` is present.
-function play_chime {
-    chimelocation=$(echo ${0%/*}/pom/chime.mp3)
+# Set the command to be used for playing audio files.#{{{
+function set_play_command {
     if command -v afplay &> /dev/null; then
-        afplay $chimelocation
+        play_command="afplay"
     elif command -v mpg123 &> /dev/null; then
-        mpg123 $chimelocation
-    else
-        return
+        play_command=mpg123 $chime_location
     fi
+    return
 }
+#}}}
 
-# Print current status.
+# Play pink noise.#{{{
+function play_noise {
+    chime_location=$(echo ${0%/*}/pom/noise.mp3)
+    $play_command $chime_location
+    return
+}
+#}}}
+
+# Play a chime.#{{{
+function play_chime {
+    chime_location=$(echo ${0%/*}/pom/chime.mp3)
+    sleep 4  # Wait for noise to stop.
+    $play_command $chime_location
+    return
+}
+#}}}
+
+# Print current status.#{{{
 function print_status {
     clear
     minutes_remaining=$(($time_in_minutes - $1))
     echo "$minutes_remaining minutes remaining for: $task."
 }
+#}}}
 
-# Print final status.
+# Print and log finished task.#{{{
 function finish {
     clear
     msg="$time_in_minutes minutes on $task."
@@ -48,18 +65,21 @@ function finish {
     ring_bell
     play_chime
 }
+#}}}
 
-# Try to ring the terminal bell.
+# Try to ring the terminal bell.#{{{
 function ring_bell {
     which tput >/dev/null && tput bel
 }
+#}}}
 
-# Print short version of help.
+# Print short version of help.#{{{
 function print_usage {
     echo "Usage: pom <task>"
 }
+#}}}
 
-# Print help.
+# Print help.#{{{
 function print_help {
     help_text='
     NAME
@@ -76,16 +96,23 @@ function print_help {
 
     echo "$help_text"
 }
+#}}}
 
-# Main function.
+# Main function.#{{{
 function run_main {
+    set_play_command
     for minute in `seq $time_in_minutes`
     do
         print_status $(($minute-1))
-        sleep 60
+        for second in `seq 60`
+        do
+            play_noise &
+            sleep 1
+        done
     done
     finish
 }
+#}}}
 
 # Parse options and run main.
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
