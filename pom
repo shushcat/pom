@@ -92,8 +92,7 @@ function print_help {
 # Main function.#{{{
 function run_main {
     set_play_command
-    for minute in `seq $time_in_minutes`
-    do
+    for minute in `seq $time_in_minutes`; do
         print_status $(($minute-1))
         sleep 60
     done
@@ -105,8 +104,7 @@ function run_main {
 # Take break.#{{{
 function take_break {
     echo "Breath."
-    for minute in `seq 5`
-    do
+    for minute in `seq 5`; do
         if [ $minute == 5 ]; then
             echo "$((6-$minute)) break minute remaining."
         else
@@ -118,16 +116,14 @@ function take_break {
 #}}}
 
 # Parse options and run main.
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]
-then
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     print_help && exit 0
-elif [ -z "$1" ]
-then
+elif [ -z "$1" ]; then
     print_usage && exit 1
 else
     while true; do
         run_main
-        echo "Press any key for another, or press N to quit."
+        echo "Press any key for another, or enter N to quit."
         read repeat
         if [ $repeat == "N" ] || [ $repeat == "n" ]; then
             break
