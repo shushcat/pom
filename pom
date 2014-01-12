@@ -98,6 +98,22 @@ function run_main {
         sleep 60
     done
     finish
+    take_break
+}
+#}}}
+
+# Take break.#{{{
+function take_break {
+    echo "Breath."
+    for minute in `seq 5`
+    do
+        if [ $minute == 5 ]; then
+            echo "$((6-$minute)) break minute remaining."
+        else
+            echo "$((6-$minute)) break minutes remaining."
+        fi
+        sleep 60
+    done
 }
 #}}}
 
@@ -109,5 +125,12 @@ elif [ -z "$1" ]
 then
     print_usage && exit 1
 else
-    run_main
+    while true; do
+        run_main
+        echo "Press any key for another, or press \'N\' to quit."
+        read repeat
+        if [ $repeat == "N" ] || [ $repeat == "n" ]; then
+            break
+        fi
+    done
 fi
