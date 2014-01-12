@@ -127,7 +127,7 @@ then
 else
     while true; do
         run_main
-        echo "Press any key for another, or press \'N\' to quit."
+        echo "Press any key for another, or press N to quit."
         read repeat
         if [ $repeat == "N" ] || [ $repeat == "n" ]; then
             break
