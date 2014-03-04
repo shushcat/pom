@@ -122,12 +122,6 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 elif [ -z "$1" ]; then
     print_usage && exit 1
 else
-    while true; do
-        run_main
-        echo "Press any key for another, or enter N to quit."
-        read repeat
-        if [ $repeat == "N" ] || [ $repeat == "n" ]; then
-            break
-        fi
-    done
+    run_main
+    echo "Another?"
 fi
