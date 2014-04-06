@@ -2,7 +2,7 @@
 
 # Minimalistic time tracking and logging.
 # Run with `-h` or `--help` to learn more.
-# By John O Brickley.
+# By John O. Brickley.
 # Derived from a script by @tobym (Toby Matejovsky).
 
 ################################
@@ -10,15 +10,13 @@
 ################################
 
 # Runtime of a single session.
-time_in_minutes=25
+pom_time=25
 # Logfile.
-logfile=$HOME/.pom.log
+pom_logfile=$HOME/.pom.log
 # Check for config overrides.
 if [[ -e $HOME/.pom.rc ]]; then
     source $HOME/.pom.rc
 fi
-
-task=$@
 
 # Set the command to be used for playing audio files.#{{{
 function set_play_command {
@@ -42,7 +40,7 @@ function play_chime {
 # Print current status.#{{{
 function print_status {
     clear
-    minutes_remaining=$(($time_in_minutes - $1))
+    minutes_remaining=$(($pom_time - $1))
     echo "$minutes_remaining minutes remaining for: $task."
 }
 #}}}
@@ -50,9 +48,9 @@ function print_status {
 # Print and log finished task.#{{{
 function finish {
     clear
-    msg="$time_in_minutes minutes on $task."
+    msg="$pom_time minutes on $task."
     echo $msg
-    echo "$(date +"%Y-%m-%d  %H:%M")   $time_in_minutes  $task" >> $logfile
+    echo "$(date +"%Y-%m-%d  %H:%M")   $pom_time  $task" >> $pom_logfile
     ring_bell
     play_chime
 }
@@ -66,7 +64,7 @@ function ring_bell {
 
 # Print short version of help.#{{{
 function print_usage {
-    echo "Usage: pom <task>"
+    echo "Usage: pom"
 }
 #}}}
 
@@ -74,17 +72,18 @@ function print_usage {
 function print_help {
     help_text='
     NAME
-      pom -- a minimalist pomodoro-style time-tracker.
+      pom -- a minimalistic pomodoro-style time-tracker.
 
   SYNOPSIS
-      pom <task>
+      pom
 
   DESCRIPTION
-      The pom utility counts down for 25 minutes as you work on a task.
-      Logfile location is $HOME/.pom.log by default, but can be changed
-      in the "CONFIGURATION" section at the top of the script source.
+      The pom utility counts down for 25 minutes as you
+      work on a task.  Logfile location and pomodoro length
+      can both be set by either editing the "CONFIGURATION"
+      section at the top of this script, or by setting the
+      "pom_logfile" and "pom_time" variables in ~/.pom.rc.
 '
-
     echo "$help_text"
 }
 #}}}
@@ -92,17 +91,16 @@ function print_help {
 # Main function.#{{{
 function run_main {
     set_play_command
-    for minute in `seq $time_in_minutes`; do
+    for minute in `seq $pom_time`; do
         print_status $(($minute-1))
         sleep 60
     done
     finish
-    take_break
 }
 #}}}
 
 # Take break.#{{{
-function take_break {
+function take_short_break {
     echo "Breath."
     for minute in `seq 5`; do
         if [ $minute == 5 ]; then
@@ -115,14 +113,33 @@ function take_break {
     ring_bell
     play_chime
 }
+
+function take_long_break {
+    echo "Stretch."
+    for minute in `seq 20`; do
+        if [ $minute == 20 ]; then
+            echo "$((21-$minute)) break minute remaining."
+        else
+            echo "$((21-$minute)) break minutes remaining."
+        fi
+        sleep 60
+    done
+    ring_bell
+    play_chime
+}
 #}}}
 
 # Parse options and run main.
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+if [ "$1" = "-h" ]; then
+    print_usage && exit 0
+elif [ "$1" = "--help" ]; then
     print_help && exit 0
-elif [ -z "$1" ]; then
-    print_usage && exit 1
 else
-    run_main
-    echo "Another?"
+    for pom in `seq 4`; do
+        echo "Enter task:"
+        read task
+        run_main
+#        take_short_break
+    done
+    take_long_break
 fi
