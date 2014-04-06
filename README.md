@@ -6,22 +6,22 @@ A minimalistic time-tracker with logging and a pleasant-sounding chime.
 Usage
 --------
 
-    pom <task>
+    pom
 
 Synopsis
 -----------
 
-The `pom` utility counts down for a predefined length of time while you work on a task and, when each period ends, plays a chime, then outputs a datestamped log entry.
+The `pom` utility counts down for a predefined length of time while you work on a task.  When each period ends, `pom` plays a chime and adds a datestamped entry to `~/pom.log` before counting down for a five-minute break period and chiming again.  Every four breaks, a twenty-minute break is triggered, after which the utility exits.
 
 Configuration
 --------------
 
-The variables `time_in_minutes` and `logfile` can be set using a `.pom.rc` file in your `$HOME`.  By default, `time_in_minutes=25` and `logfile=$HOME/.pom.log`.
+The variables `pom_time` and `pom_logfile` can be set in `~/.pom.rc` or at the top of the script itself.  By default, `time_in_minutes=25` and `logfile=$HOME/.pom.log`.
 
 A simple alternative configuration file, `~/.pom.rc`, might look like this:
 
-    time_in_minutes=10
-    logfile="/dev/null"
+    pom_time=10
+    pom_logfile="/dev/null"
 
 Extras
 ------
