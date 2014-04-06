@@ -112,7 +112,8 @@ function take_break {
         fi
         sleep 60
     done
-    which tput >/dev/null && tput bel
+    ring_bell
+    play_chime
 }
 #}}}
 
