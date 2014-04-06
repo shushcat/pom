@@ -136,8 +136,7 @@ elif [ "$1" = "--help" ]; then
     print_help && exit 0
 else
     for pom in `seq 4`; do
-        echo "Enter task:"
-        read task
+        read -p "Enter task: " task
         run_main
 #        take_short_break
     done
