@@ -138,7 +138,7 @@ else
     for pom in `seq 4`; do
         read -p "Enter task: " task
         run_main
-#        take_short_break
+        take_short_break
     done
     take_long_break
 fi
