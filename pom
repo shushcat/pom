@@ -18,6 +18,9 @@ if [[ -e $HOME/.pom.rc ]]; then
     source $HOME/.pom.rc
 fi
 
+# Set initial task, if any.
+task=$@
+
 # Set the command to be used for playing audio files.#{{{
 function set_play_command {
     if command -v afplay &> /dev/null; then
@@ -135,10 +138,17 @@ if [ "$1" = "-h" ]; then
 elif [ "$1" = "--help" ]; then
     print_help && exit 0
 else
-    for pom in `seq 4`; do
-        read -p "Enter task: " task
+    pom_count=1
+    while [[ $pom_count < 5 ]]; do
+        if [[ $pom_count > 1 ]] || [ -z $@ ]; then
+            read -p "Enter task: " task
+        fi
         run_main
-        take_short_break
+        if [[ $pom_count < 4 ]]; then
+            take_short_break
+        else
+            take_long_break
+        fi
+        pom_count=$(($pom_count+1))
     done
-    take_long_break
 fi
