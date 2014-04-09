@@ -8,10 +8,12 @@ Usage
 
     pom
 
+An initial task can be optionally provided at the command line, in which case the user will not be prompted until subsequent intervals.
+
 Synopsis
 -----------
 
-The `pom` utility counts down for a predefined length of time while you work on a task.  When each period ends, `pom` plays a chime and adds a datestamped entry to `~/pom.log` before counting down for a five-minute break period and chiming again.  Every four breaks, a twenty-minute break is triggered, after which the utility exits.
+The `pom` utility prompts for a task, then counts down for a predefined length of time while you work.  When each period ends, `pom` plays a chime and adds a datestamped entry to `~/pom.log` before counting down for a five-minute break period and chiming again.  Every four breaks, a twenty-minute break is triggered, after which the utility exits.
 
 Configuration
 --------------
