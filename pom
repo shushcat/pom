@@ -113,7 +113,8 @@ function take_short_break {
         fi
         sleep 60
     done
-    ring_bell
+
+    ring_bell &
     play_chime
 }
 
@@ -127,6 +128,7 @@ function take_long_break {
         fi
         sleep 60
     done
+
     ring_bell
     play_chime
 }
@@ -140,7 +142,7 @@ elif [ "$1" = "--help" ]; then
 else
     pom_count=1
     while [[ $pom_count < 5 ]]; do
-        if [[ $pom_count > 1 ]] || [ -z $@ ]; then
+        if [[ $pom_count > 1 ]] || [[ -z $@ ]]; then
             read -p "Enter task: " task
         fi
         run_main
