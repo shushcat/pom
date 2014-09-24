@@ -10,7 +10,7 @@
 ################################
 
 # Runtime of a single session.
-pom_time=25
+pom_time=1
 # Logfile.
 pom_logfile=$HOME/.pom.log
 # Check for config overrides.
@@ -21,58 +21,40 @@ fi
 # Set initial task, if any.
 task=$@
 
-# Set the command to be used for playing audio files.#{{{
-function set_play_command {
+function play_chime { #{{{
+    chime_location=$(echo ${0%/*}/pom/chime.mp3)
     if command -v afplay &> /dev/null; then
-        play_command="afplay"
-    elif command -v mpg123 &> /dev/null; then
-        play_command=mpg123 $chime_location
+        afplay $chime_location
+    elif command -v mpg321 &> /dev/null; then
+        mpg321 -q $chime_location
     fi
     return
-}
-#}}}
+} #}}}
 
-# Play a chime.#{{{
-function play_chime {
-    chime_location=$(echo ${0%/*}/pom/chime.mp3)
-    $play_command $chime_location &
-    return
-}
-#}}}
-
-# Print current status.#{{{
-function print_status {
+function print_status { #{{{
     clear
     minutes_remaining=$(($pom_time - $1))
     echo "$minutes_remaining minutes remaining for: $task."
-}
-#}}}
+} #}}}
 
-# Print and log finished task.#{{{
-function finish {
+function finish { #{{{
     clear
     msg="$pom_time minutes on $task."
     echo $msg
     echo "$(date +"%Y-%m-%d  %H:%M")   $pom_time  $task" >> $pom_logfile
     ring_bell
     play_chime
-}
-#}}}
+} #}}}
 
-# Try to ring the terminal bell.#{{{
-function ring_bell {
+function ring_bell { #{{{
     which tput >/dev/null && tput bel
-}
-#}}}
+} #}}}
 
-# Print short version of help.#{{{
-function print_usage {
+function print_usage { #{{{
     echo "Usage: pom"
-}
-#}}}
+} #}}}
 
-# Print help.#{{{
-function print_help {
+function print_help { #{{{
     help_text='
     NAME
       pom -- a minimalistic pomodoro-style time-tracker.
@@ -88,22 +70,17 @@ function print_help {
       "pom_logfile" and "pom_time" variables in ~/.pom.rc.
 '
     echo "$help_text"
-}
-#}}}
+} #}}}
 
-# Main function.#{{{
-function run_main {
-    set_play_command
+function run_main { #{{{
     for minute in `seq $pom_time`; do
         print_status $(($minute-1))
         sleep 60
     done
     finish
-}
-#}}}
+} #}}}
 
-# Take break.#{{{
-function take_short_break {
+function take_short_break { #{{{
     echo "Breath."
     for minute in `seq 5`; do
         if [ $minute == 5 ]; then
@@ -116,9 +93,9 @@ function take_short_break {
 
     ring_bell &
     play_chime
-}
+} #}}}
 
-function take_long_break {
+function take_long_break { #{{{
     echo "Stretch."
     for minute in `seq 20`; do
         if [ $minute == 20 ]; then
@@ -131,10 +108,8 @@ function take_long_break {
 
     ring_bell
     play_chime
-}
-#}}}
+} #}}}
 
-# Parse options and run main.
 if [ "$1" = "-h" ]; then
     print_usage && exit 0
 elif [ "$1" = "--help" ]; then
