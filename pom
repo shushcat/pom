@@ -10,7 +10,7 @@
 ################################
 
 # Runtime of a single session.
-pom_time=1
+pom_time=25
 # Logfile.
 pom_logfile=$HOME/.pom.log
 # Check for config overrides.
