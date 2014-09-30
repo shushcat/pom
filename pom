@@ -10,7 +10,7 @@
 ################################
 
 # Runtime of a single session.
-pom_time=25
+pom_time=1
 # Logfile.
 pom_logfile=$HOME/.pom.log
 # Check for config overrides.
@@ -42,6 +42,7 @@ function finish { #{{{
     msg="$pom_time minutes on $task."
     echo $msg
     echo "$(date +"%Y-%m-%d  %H:%M")   $pom_time  $task" >> $pom_logfile
+    prev_task=$task
     ring_bell
     play_chime
 } #}}}
@@ -117,7 +118,12 @@ elif [ "$1" = "--help" ]; then
 else
     pom_count=1
     while [[ $pom_count < 5 ]]; do
-        if [[ $pom_count > 1 ]] || [[ -z $@ ]]; then
+        if [[ $pom_count > 1 ]]; then
+            read -p "Enter task (or press Enter to repeat previous task): " task
+            if [[ -z $task ]]; then
+                task=$prev_task
+            fi
+        elif [[ -z $@ ]]; then
             read -p "Enter task: " task
         fi
         run_main
