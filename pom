@@ -24,9 +24,9 @@ task=$@
 function play_chime { #{{{
     chime_location=$(echo ${0%/*}/pom/chime.mp3)
     if command -v afplay &> /dev/null; then
-        afplay $chime_location
+        afplay $chime_location &
     elif command -v mpg321 &> /dev/null; then
-        mpg321 -q $chime_location
+        mpg321 -q $chime_location &
     fi
     return
 } #}}}
