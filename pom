@@ -34,7 +34,7 @@ function play_chime { #{{{
 function print_status { #{{{
     clear
     minutes_remaining=$(($pom_time - $1))
-    echo "$minutes_remaining minutes remaining for: $task."
+    echo "$minutes_remaining minutes remaining to: $task."
 } #}}}
 
 function finish { #{{{
